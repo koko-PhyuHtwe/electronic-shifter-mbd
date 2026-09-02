@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'GearShift_Stateflow'.
  *
- * Model version                  : 1.16
+ * Model version                  : 1.18
  * Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
- * C/C++ source code generated on : Sat Aug 29 15:58:34 2026
+ * C/C++ source code generated on : Wed Sep  2 22:16:07 2026
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: NXP->Cortex-M4
@@ -37,14 +37,9 @@ typedef struct {
   uint16_T comm_timeout_timer;         /* '<Root>/GearShift_Logic' */
   uint8_T is_active_c3_GearShift_Stateflo;/* '<Root>/GearShift_Logic' */
   uint8_T is_c3_GearShift_Stateflow;   /* '<Root>/GearShift_Logic' */
+  uint8_T is_M;                        /* '<Root>/GearShift_Logic' */
   uint8_T temporalCounter_i1;          /* '<Root>/GearShift_Logic' */
 } DW_GearShift_Stateflow_T;
-
-/* Invariant block signals (default storage) */
-typedef struct {
-  const uint8_T MultiportSwitch;       /* '<Root>/Multiport Switch' */
-  const uint8_T MultiportSwitch1;      /* '<Root>/Multiport Switch1' */
-} ConstB_GearShift_Stateflow_T;
 
 /* External inputs (root inport signals with default storage) */
 typedef struct {
@@ -77,7 +72,6 @@ extern ExtU_GearShift_Stateflow_T GearShift_Stateflow_U;
 
 /* External outputs (root outports fed by signals with default storage) */
 extern ExtY_GearShift_Stateflow_T GearShift_Stateflow_Y;
-extern const ConstB_GearShift_Stateflow_T GearShift_Stateflow_ConstB;/* constant block i/o */
 
 /* Model entry point functions */
 extern void GearShift_Stateflow_initialize(void);
@@ -90,14 +84,32 @@ extern RT_MODEL_GearShift_Stateflow_T *const GearShift_Stateflow_M;
 /*-
  * These blocks were eliminated from the model due to optimizations:
  *
- * Block '<Root>/Display' : Unused code path elimination
- * Block '<Root>/Unit Delay' : Unused code path elimination
- * Block '<Root>/Manual Switch' : Eliminated due to constant selection input
- * Block '<Root>/Manual Switch1' : Eliminated due to constant selection input
- * Block '<Root>/Manual Switch2' : Eliminated due to constant selection input
+ * Block '<Root>/Constant' : Unused code path elimination
+ * Block '<Root>/Constant1' : Unused code path elimination
+ * Block '<Root>/Constant10' : Unused code path elimination
  * Block '<Root>/Constant11' : Unused code path elimination
+ * Block '<Root>/Constant12' : Unused code path elimination
+ * Block '<Root>/Constant13' : Unused code path elimination
  * Block '<Root>/Constant14' : Unused code path elimination
+ * Block '<Root>/Constant15' : Unused code path elimination
  * Block '<Root>/Constant16' : Unused code path elimination
+ * Block '<Root>/Constant2' : Unused code path elimination
+ * Block '<Root>/Constant3' : Unused code path elimination
+ * Block '<Root>/Constant4' : Unused code path elimination
+ * Block '<Root>/Constant5' : Unused code path elimination
+ * Block '<Root>/Constant6' : Unused code path elimination
+ * Block '<Root>/Constant7' : Unused code path elimination
+ * Block '<Root>/Constant8' : Unused code path elimination
+ * Block '<Root>/Constant9' : Unused code path elimination
+ * Block '<Root>/Display' : Unused code path elimination
+ * Block '<Root>/Display1' : Unused code path elimination
+ * Block '<Root>/Manual Switch' : Unused code path elimination
+ * Block '<Root>/Manual Switch1' : Unused code path elimination
+ * Block '<Root>/Manual Switch2' : Unused code path elimination
+ * Block '<Root>/Multiport Switch' : Unused code path elimination
+ * Block '<Root>/Multiport Switch1' : Unused code path elimination
+ * Block '<Root>/Unit Delay' : Unused code path elimination
+ * Block '<Root>/Unit Delay1' : Unused code path elimination
  */
 
 /*-

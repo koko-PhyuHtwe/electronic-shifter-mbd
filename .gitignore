@@ -112,3 +112,5 @@ resume_*.pdf
 # 临时脚本与本地附件引用路径
 read_docx.py
 .trae-cn/attachments/
+# <D20260902> S32DS SDK republish backup, not tracked
+S32K144/freertos_s32k144_backup*/

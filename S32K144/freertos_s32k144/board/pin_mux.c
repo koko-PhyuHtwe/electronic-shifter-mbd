@@ -9,10 +9,16 @@ mcu_data: s32sdk_s32k1xx_rtm_402
 processor_version: 0.0.0
 pin_labels:
 - {pin_num: '68', pin_signal: PTB12, label: BTN0, identifier: BTN0}
-- {pin_num: '50', pin_signal: PTC12, label: KEY1}
-- {pin_num: '4', pin_signal: PTD0, label: YELLOW}
-- {pin_num: '22', pin_signal: PTD15, label: GREEN}
-- {pin_num: '21', pin_signal: PTD16, label: BLUE}
+- {pin_num: '58', pin_signal: PTA6, label: MCU_ADC0_CH2}
+- {pin_num: '57', pin_signal: PTA7, label: MCU_ADC0_CH3}
+- {pin_num: '50', pin_signal: PTC12, label: MCU_KEY_1}
+- {pin_num: '81', pin_signal: PTC6, label: MCU_LPUART1_RX_PC6}
+- {pin_num: '80', pin_signal: PTC7, label: MCU_LPUART1_TX_PC7}
+- {pin_num: '44', pin_signal: PTC16, label: MCU_CAN2_RX}
+- {pin_num: '43', pin_signal: PTC17, label: MCU_CAN2_TX}
+- {pin_num: '4', pin_signal: PTD0, label: MCU_LED_4_Y}
+- {pin_num: '22', pin_signal: PTD15, label: MCU_LED_2_G}
+- {pin_num: '21', pin_signal: PTD16, label: MCU_LED_1_B}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -42,13 +48,15 @@ pin_labels:
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: core0}
 - pin_list:
-  - {pin_num: '44', peripheral: CAN2, signal: 'rxd, rxd', pin_signal: PTC16}
-  - {pin_num: '43', peripheral: CAN2, signal: 'txd, txd', pin_signal: PTC17}
-  - {pin_num: '80', peripheral: LPUART1, signal: txd, pin_signal: PTC7, direction: OUTPUT}
-  - {pin_num: '81', peripheral: LPUART1, signal: rxd, pin_signal: PTC6, PS: state_1}
-  - {pin_num: '50', peripheral: PORTC, signal: 'port, 12', pin_signal: PTC12, direction: INPUT, PS: state_1}
   - {pin_num: '21', peripheral: PORTD, signal: 'port, 16', pin_signal: PTD16, direction: OUTPUT}
   - {pin_num: '22', peripheral: PORTD, signal: 'port, 15', pin_signal: PTD15, direction: OUTPUT}
+  - {pin_num: '58', peripheral: ADC0, signal: 'se, 2', pin_signal: PTA6}
+  - {pin_num: '57', peripheral: ADC0, signal: 'se, 3', pin_signal: PTA7}
+  - {pin_num: '50', peripheral: PORTC, signal: 'port, 12', pin_signal: PTC12, direction: INPUT}
+  - {pin_num: '81', peripheral: LPUART1, signal: rxd, pin_signal: PTC6}
+  - {pin_num: '80', peripheral: LPUART1, signal: txd, pin_signal: PTC7, direction: OUTPUT}
+  - {pin_num: '44', peripheral: CAN2, signal: 'rxd, rxd', pin_signal: PTC16}
+  - {pin_num: '43', peripheral: CAN2, signal: 'txd, txd', pin_signal: PTC17}
   - {pin_num: '4', peripheral: PORTD, signal: 'port, 0', pin_signal: PTD0, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
@@ -56,6 +64,32 @@ BOARD_InitPins:
 
 /* Generate array of configured pin structures */
 pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
+    {
+        .base            = PORTA,
+        .pinPortIdx      = 6U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_PIN_DISABLED,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = NULL,
+        .digitalFilter   = false,
+    },
+    {
+        .base            = PORTA,
+        .pinPortIdx      = 7U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_PIN_DISABLED,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = NULL,
+        .digitalFilter   = false,
+    },
     {
         .base            = PORTC,
         .pinPortIdx      = 12U,

@@ -47,6 +47,8 @@
 #include "BoardDefines.h"
 #include "sbw_can.h"
 #include "sbw_hmi.h"
+#include "sbw_adc.h"
+#include "sbw_veh.h"
 
 
 
@@ -96,7 +98,7 @@ void rtos_start( void )
 
 	/* Create SBW application tasks. */
 	xTaskCreate( vTask_Heartbeat,   "Heart", 256, NULL, TASK_HEARTBEAT_PRIORITY,   NULL );
-//	xTaskCreate( vTask_ADC_Sample,  "ADC",   configMINIMAL_STACK_SIZE, NULL, TASK_ADC_PRIORITY,         NULL );
+	xTaskCreate( vTask_ADC_Sample,  "ADC",   256, NULL, TASK_ADC_PRIORITY,         NULL );
 //	xTaskCreate( vTask_Gear_Logic,  "Gear",  configMINIMAL_STACK_SIZE, NULL, TASK_GEAR_PRIORITY,        NULL );
 //	xTaskCreate( vTask_CAN_Tx,      "CANTx", configMINIMAL_STACK_SIZE, NULL, TASK_CAN_TX_PRIORITY,      NULL );
 	xTaskCreate( vTask_CAN_Rx,      "CANRx", configMINIMAL_STACK_SIZE, NULL, TASK_CAN_RX_PRIORITY,      NULL );
@@ -151,6 +153,7 @@ static void vTask_ADC_Sample( void *pvParameters )
 {
     TickType_t xNextWakeTime;
     const TickType_t xPeriod = pdMS_TO_TICKS( TASK_ADC_PERIOD_MS );
+    uint32_t printCnt = 0U;
 
     (void)pvParameters;
     xNextWakeTime = xTaskGetTickCount();
@@ -159,7 +162,22 @@ static void vTask_ADC_Sample( void *pvParameters )
     {
         vTaskDelayUntil( &xNextWakeTime, xPeriod );
 
-        /* TODO: read ADC0/ADC1 channels and update stick_x/stick_y/brake_pedal. */
+        /* 每 10ms 采样刹车 + 油门两路 ADC。 */
+        ADC_SampleAll();
+
+        /* 每 100ms 把刹车/转速/车速发到串口屏，并更新占位车辆模型。 */
+        printCnt++;
+        if( printCnt >= 10U )
+        {
+            printCnt = 0U;
+
+            /* 占位车辆模型：油门→转速、油门/刹车→车速 */
+            VehModel_Update();
+
+            HMI_SendNumber("moudle.n0.val", (int32_t)g_brake_pct);     /* 刹车 %   */
+            HMI_SendNumber("moudle.n1.val", (int32_t)g_engine_rpm);    /* 转速 rpm */
+            HMI_SendNumber("moudle.n2.val", (int32_t)g_vehicle_speed); /* 车速 km/h */
+        }
     }
 }
 /*-----------------------------------------------------------*/
@@ -350,6 +368,12 @@ static void prvSetupHardware( void )
 
     /* Initialize FlexCAN2 for SBW communication. */
     CAN_Init();
+
+    /* Initialize ADC0 (brake pedal PTA6, throttle PTA7) + auto calibration. */
+    ADC_Init();
+
+    /* Initialize placeholder vehicle/engine model. */
+    VehModel_Init();
 
     /* Initialize LPUART1 and HMI protocol for serial screen. */
     HMI_Init();
