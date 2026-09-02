@@ -1,0 +1,114 @@
+﻿# ==========================================
+# BMW Shift-by-Wire HIL - .gitignore
+# ==========================================
+
+# Keil MDK 编译产物
+*.o
+*.d
+*.crf
+*.iex
+*.htm
+*.dep
+*.axf
+*.hex
+*.bin
+*.elf
+*.lnp
+*.sct
+*.ini
+*.dbgconf
+*.uvoptx
+*.uvguix.*
+JLinkLog.txt
+*.bak
+
+# Keil 中间文件
+*.lst
+*.map
+*.mapx
+
+# Simulink/MATLAB 缓存与编译产物
+*.slxc
+slprj/
+accel/
+modeladvisor/
+*.mat
+!GearShift_Stateflow_ert_rtw/buildInfo.mat
+!GearShift_Stateflow_ert_rtw/codeInfo.mat
+!GearShift_Stateflow_ert_rtw/rtwtypeschksum.mat
+
+# MATLAB 临时文件
+~*
+*.asv
+*.m~
+*.mex*
+*.autosave
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE 配置文件
+.vscode/
+.idea/
+*.swp
+*~
+
+# 编辑器备份
+*.orig
+*.tmp
+*.original
+
+# 开发板参考例程（非本项目代码）
+STM32G474VET6/g474vet6-master/
+
+# MATLAB 生成代码中的临时/缓存目录
+MATLAB/GearShift_Stateflow_ert_rtw/tmwinternal/
+MATLAB/GearShift_Stateflow_ert_rtw/*.tmw
+MATLAB/GearShift_Stateflow_ert_rtw/codedescriptor.dmr
+
+# S32K144 日志、临时文件与编译产物
+S32K144/FreeRTOS_TAD_logs/
+S32K144/RemoteSystemsTempFiles/
+S32K144/freertos_s32k144/Debug_FLASH/
+S32K144/freertos_s32k144/Debug_RAM/
+S32K144/freertos_s32k144/*.launch
+
+# STM32G474 外设库与编译产物（可通过 .ioc 重新生成）
+STM32G474VET6/ShiftByWire_HIL/Drivers/
+STM32G474VET6/ShiftByWire_HIL/Middlewares/
+STM32G474VET6/ShiftByWire_HIL/MDK-ARM/ShiftByWire_HIL/
+STM32G474VET6/ShiftByWire_HIL/.mxproject
+STM32G474VET6/ShiftByWire_HIL/Debug/
+
+# 开发板参考例程
+STM32G474VET6/g474vet6-master/
+
+# S32DS 工作区元数据
+S32K144/.metadata/
+
+# S32DS 包支持缓存
+S32K144/.s32ds_packages_support/
+
+# MDK 调试辅助文件
+STM32G474VET6/ShiftByWire_HIL/MDK-ARM/*.scvd
+STM32G474VET6/ShiftByWire_HIL/MDK-ARM/RTE/
+
+# S32DS 个人偏好 & 调试配置（避免泄露本机 J-Link 序列号 / 绝对路径）
+**/.settings/
+S32K144/freertos_s32k144/Debug_Configurations/
+S32K144/freertos_s32k144/Doxygen/
+
+# 个人简历 / 求职材料（敏感，禁止入库）
+*简历*.docx
+*简历*.pdf
+*简历*.html
+resume_*.html
+resume_*.docx
+resume_*.pdf
+~$*.docx
+
+# 临时脚本与本地附件引用路径
+read_docx.py
+.trae-cn/attachments/
