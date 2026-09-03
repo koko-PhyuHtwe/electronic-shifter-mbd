@@ -130,12 +130,11 @@ void CAN_SendMessage(uint32_t id, const uint8_t *data, uint8_t len)
     }
 
     s_canTxInfo.data_length = len;
-    status = FLEXCAN_DRV_SendBlocking(CAN_INSTANCE,
-                                      CAN_TX_MB_IDX,
-                                      &s_canTxInfo,
-                                      id,
-                                      data,
-                                      CAN_TX_TIMEOUT_MS);
+    status = FLEXCAN_DRV_Send(CAN_INSTANCE,
+                              CAN_TX_MB_IDX,
+                              &s_canTxInfo,
+                              id,
+                              data);
     if (status == STATUS_SUCCESS)
     {
         g_canTxCount++;

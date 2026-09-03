@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'GearShift_Stateflow'.
  *
- * Model version                  : 1.18
+ * Model version                  : 1.20
  * Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
- * C/C++ source code generated on : Wed Sep  2 22:16:07 2026
+ * C/C++ source code generated on : Thu Sep  3 09:35:07 2026
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: NXP->Cortex-M4
@@ -35,10 +35,10 @@
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
   uint16_T comm_timeout_timer;         /* '<Root>/GearShift_Logic' */
+  uint8_T UnitDelay1_DSTATE;           /* '<Root>/Unit Delay1' */
   uint8_T is_active_c3_GearShift_Stateflo;/* '<Root>/GearShift_Logic' */
   uint8_T is_c3_GearShift_Stateflow;   /* '<Root>/GearShift_Logic' */
   uint8_T is_M;                        /* '<Root>/GearShift_Logic' */
-  uint8_T temporalCounter_i1;          /* '<Root>/GearShift_Logic' */
 } DW_GearShift_Stateflow_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -109,7 +109,6 @@ extern RT_MODEL_GearShift_Stateflow_T *const GearShift_Stateflow_M;
  * Block '<Root>/Multiport Switch' : Unused code path elimination
  * Block '<Root>/Multiport Switch1' : Unused code path elimination
  * Block '<Root>/Unit Delay' : Unused code path elimination
- * Block '<Root>/Unit Delay1' : Unused code path elimination
  */
 
 /*-

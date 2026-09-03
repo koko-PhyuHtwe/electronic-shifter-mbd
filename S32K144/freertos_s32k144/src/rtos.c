@@ -49,6 +49,15 @@
 #include "sbw_hmi.h"
 #include "sbw_adc.h"
 #include "sbw_veh.h"
+#include "sbw_buttons.h"
+#include "GearShift_Stateflow.h"
+
+/* 换挡决策输出（P=0, R=1, N=2, D=3, FAULT=255），供 CAN_Tx / 调试显示使用 */
+volatile uint8_t g_current_gear = 0U;
+/* 通信有效标志（收到 0x280=1，超时=0，喂 Stateflow 的 valid） */
+volatile uint8_t g_comm_valid  = 0U;
+/* G474 回传的实际档位 */
+volatile uint8_t g_actual_gear = 0U;
 
 
 
@@ -67,7 +76,7 @@ static void vTask_ADC_Sample( void *pvParameters );
 static void vTask_Gear_Logic( void *pvParameters );
 static void vTask_CAN_Tx( void *pvParameters );
 static void vTask_CAN_Rx( void *pvParameters );
-static void vTask_Unlock_Button( void *pvParameters );
+static void vTask_Buttons( void *pvParameters );
 static void vTask_Debug( void *pvParameters );
 
 /*-----------------------------------------------------------*/
@@ -96,13 +105,16 @@ void rtos_start( void )
 	/* Configure the NVIC, LED outputs and button inputs. */
 	prvSetupHardware();
 
+	/* Initialize the Stateflow gear-shift state machine. */
+	GearShift_Stateflow_initialize();
+
 	/* Create SBW application tasks. */
 	xTaskCreate( vTask_Heartbeat,   "Heart", 256, NULL, TASK_HEARTBEAT_PRIORITY,   NULL );
 	xTaskCreate( vTask_ADC_Sample,  "ADC",   256, NULL, TASK_ADC_PRIORITY,         NULL );
-//	xTaskCreate( vTask_Gear_Logic,  "Gear",  configMINIMAL_STACK_SIZE, NULL, TASK_GEAR_PRIORITY,        NULL );
-//	xTaskCreate( vTask_CAN_Tx,      "CANTx", configMINIMAL_STACK_SIZE, NULL, TASK_CAN_TX_PRIORITY,      NULL );
+	xTaskCreate( vTask_Gear_Logic,  "Gear",  256, NULL, TASK_GEAR_PRIORITY,        NULL );
+	xTaskCreate( vTask_CAN_Tx,      "CANTx", 256, NULL, TASK_CAN_TX_PRIORITY,      NULL );
 	xTaskCreate( vTask_CAN_Rx,      "CANRx", configMINIMAL_STACK_SIZE, NULL, TASK_CAN_RX_PRIORITY,      NULL );
-	xTaskCreate( vTask_Unlock_Button,"Unlock",256, NULL, TASK_UNLOCK_BTN_PRIORITY,  NULL );
+	xTaskCreate( vTask_Buttons,     "Btns",  256, NULL, TASK_UNLOCK_BTN_PRIORITY,  NULL );
 //	xTaskCreate( vTask_Debug,       "Debug", 256, NULL, TASK_DEBUG_PRIORITY,  NULL );
 
 	/* Start the scheduler. */
@@ -165,9 +177,9 @@ static void vTask_ADC_Sample( void *pvParameters )
         /* 每 10ms 采样刹车 + 油门两路 ADC。 */
         ADC_SampleAll();
 
-        /* 每 100ms 把刹车/转速/车速发到串口屏，并更新占位车辆模型。 */
+        /* 每 500ms 发一批到串口屏（降频便于肉眼观察；临时验证用） */
         printCnt++;
-        if( printCnt >= 10U )
+        if( printCnt >= 50U )
         {
             printCnt = 0U;
 
@@ -177,6 +189,25 @@ static void vTask_ADC_Sample( void *pvParameters )
             HMI_SendNumber("moudle.n0.val", (int32_t)g_brake_pct);     /* 刹车 %   */
             HMI_SendNumber("moudle.n1.val", (int32_t)g_engine_rpm);    /* 转速 rpm */
             HMI_SendNumber("moudle.n2.val", (int32_t)g_vehicle_speed); /* 车速 km/h */
+
+            /* 验证按键读取（临时，验证完可删） */
+            HMI_SendNumber("moudle.n3.val", (int32_t)g_stick_x);       /* 0中/1降/2升 */
+            HMI_SendNumber("moudle.n4.val", (int32_t)g_p_button);      /* P 档按键 0/1 */
+            HMI_SendNumber("moudle.n5.val", (int32_t)g_unlock_button); /* 解锁按键 0/1 */
+
+            /* 当前档位以字母发到屏文本组件 t3.txt */
+            {
+                const char *gearStr = "F";
+                switch (g_current_gear)
+                {
+                    case 0U:  gearStr = "P"; break;
+                    case 1U:  gearStr = "R"; break;
+                    case 2U:  gearStr = "N"; break;
+                    case 3U:  gearStr = "D"; break;
+                    default:  gearStr = "F"; break;   /* 255 = FAULT */
+                }
+                HMI_SendString("moudle.t3.txt", gearStr);
+            }
         }
     }
 }
@@ -194,7 +225,21 @@ static void vTask_Gear_Logic( void *pvParameters )
     {
         vTaskDelayUntil( &xNextWakeTime, xPeriod );
 
-        /* TODO: call GearShift_Stateflow_step() and get current_gear. */
+        /* 1. 输入映射：采集量/占位量 → Stateflow 输入 */
+        GearShift_Stateflow_U.stick_x        = (uint8_T)g_stick_x;
+        GearShift_Stateflow_U.stick_y        = 0U;                         /* 暂不做 M */
+        GearShift_Stateflow_U.brake_pedal    = (uint16_T)g_brake_pct;
+        GearShift_Stateflow_U.vehicle_speed  = (uint16_T)g_vehicle_speed;
+        GearShift_Stateflow_U.engine_rpm     = (uint16_T)g_engine_rpm;
+        GearShift_Stateflow_U.p_button       = (boolean_T)g_p_button;
+        GearShift_Stateflow_U.unlock_button  = (boolean_T)g_unlock_button;
+        GearShift_Stateflow_U.valid          = (boolean_T)g_comm_valid;   /* 收到 0x280 帧有效 */
+
+        /* 2. 跑一帧换挡状态机（x_prev 自锁已在 Stateflow 内部实现，此处直接喂原值） */
+        GearShift_Stateflow_step();
+
+        /* 3. 读输出当前档位（后续接 CAN_Tx 发 0x180） */
+        g_current_gear = GearShift_Stateflow_Y.current_gear;
     }
 }
 /*-----------------------------------------------------------*/
@@ -204,8 +249,7 @@ static void vTask_CAN_Tx( void *pvParameters )
     TickType_t xNextWakeTime;
     const TickType_t xPeriod = pdMS_TO_TICKS( TASK_CAN_TX_PERIOD_MS );
     uint8_t txData[8];
-    uint8_t txCounter = 0U;
-    uint8_t i;
+    uint8_t life = 0U;
 
     (void)pvParameters;
     xNextWakeTime = xTaskGetTickCount();
@@ -214,21 +258,17 @@ static void vTask_CAN_Tx( void *pvParameters )
     {
         vTaskDelayUntil( &xNextWakeTime, xPeriod );
 
-        /* Send a test frame every 100 ms (10 task periods). */
-        txCounter++;
-        if( txCounter >= 10U )
-        {
-            txData[0] = 0xAAU;
-            txData[1] = txCounter;
-            for( i = 2U; i < 8U; i++ )
-            {
-                txData[i] = (uint8_t)(0x10U + i);
-            }
+        /* 打包 0x180：Byte0 目标档, Byte1 显示档, Byte3 生命帧 */
+        txData[0] = (uint8_t)g_current_gear;   /* target_gear */
+        txData[1] = (uint8_t)g_current_gear;   /* gear_display */
+        txData[2] = 0U;                        /* reserved */
+        txData[3] = life++;                    /* life_counter */
+        txData[4] = 0U;
+        txData[5] = 0U;
+        txData[6] = 0U;
+        txData[7] = 0U;
 
-            CAN_SendMessage(CAN_TX_ID_SBW, txData, 8U);
-
-            txCounter = 0U;
-        }
+        CAN_SendMessage(CAN_TX_ID_SBW, txData, 8U);
     }
 }
 /*-----------------------------------------------------------*/
@@ -238,7 +278,7 @@ static void vTask_CAN_Rx( void *pvParameters )
     TickType_t xNextWakeTime;
     const TickType_t xPeriod = pdMS_TO_TICKS( 10U );
     can_frame_t rxFrame;
-    static uint32_t rxCnt = 0U;
+    static uint32_t timeoutCnt = 0U;
 
     (void)pvParameters;
     xNextWakeTime = xTaskGetTickCount();
@@ -247,33 +287,34 @@ static void vTask_CAN_Rx( void *pvParameters )
     {
         vTaskDelayUntil( &xNextWakeTime, xPeriod );
 
-        /* Process all frames available in the interrupt-driven Rx queue. */
+        /* 通信超时检测：每 10ms +1，收到 0x280 清零；>50(=500ms) 判超时 */
+        timeoutCnt++;
+        if( timeoutCnt > 50U )
+        {
+            g_comm_valid = 0U;
+            timeoutCnt = 50U;
+        }
+
+        /* 处理中断驱动的接收队列里的所有帧 */
         while( CAN_RxAvailable() != 0U )
         {
             CAN_GetRxFrame(&rxFrame);
 
             if( rxFrame.id == CAN_RX_ID_SBW )
             {
-                rxCnt++;
-                /* 每收到 20 帧 0x280 翻一次绿灯，便于观察频率 */
-                if( (rxCnt % 20U) == 0U )
-                {
-                    PINS_DRV_TogglePins(LED_GPIO, (1 << LED1));
-                }
+                g_actual_gear = rxFrame.data[0];   /* Byte0 = actual_gear */
+                g_comm_valid  = 1U;
+                timeoutCnt    = 0U;
             }
         }
     }
 }
 /*-----------------------------------------------------------*/
 
-static void vTask_Unlock_Button( void *pvParameters )
+static void vTask_Buttons( void *pvParameters )
 {
     TickType_t xNextWakeTime;
     const TickType_t xPeriod = pdMS_TO_TICKS( TASK_UNLOCK_BTN_PERIOD_MS );
-    uint8_t debounceCnt = 0U;
-    uint8_t sent = 0U;
-    uint32_t pinVal;
-    uint8_t pressed;
 
     (void)pvParameters;
     xNextWakeTime = xTaskGetTickCount();
@@ -282,25 +323,8 @@ static void vTask_Unlock_Button( void *pvParameters )
     {
         vTaskDelayUntil( &xNextWakeTime, xPeriod );
 
-        pinVal  = PINS_DRV_ReadPins(UNLOCK_BTN_GPIO);
-        pressed = (uint8_t)((pinVal & (1UL << UNLOCK_BTN)) != 0UL);
-
-        if( pressed != 0U )
-        {
-            debounceCnt++;
-            if( (debounceCnt >= 3U) && (sent == 0U) )
-            {
-                /* 熄灭故障灯（低电平点亮，高电平熄灭） */
-                PINS_DRV_SetPins(FAULT_LED_GPIO, (1UL << FAULT_LED));
-                HMI_SendText("解锁成功\r\n");
-                sent = 1U;
-            }
-        }
-        else
-        {
-            debounceCnt = 0U;
-            sent        = 0U;
-        }
+        /* 每 10ms 读取 4 个按键（消抖），更新 stick_x / p_button / unlock_button */
+        Buttons_Update();
     }
 }
 /*-----------------------------------------------------------*/
