@@ -193,9 +193,9 @@ static void vTask_ADC_Sample( void *pvParameters )
             /* 验证按键读取（临时，验证完可删） */
             HMI_SendNumber("moudle.n3.val", (int32_t)g_stick_x);       /* 0中/1降/2升 */
             HMI_SendNumber("moudle.n4.val", (int32_t)g_p_button);      /* P 档按键 0/1 */
-            HMI_SendNumber("moudle.n5.val", (int32_t)g_unlock_button); /* 解锁按键 0/1 */
+            HMI_SendNumber("moudle.n5.val", (int32_t)g_stick_y);       /* 进M按键 0/2（暂顶替解锁键） */
 
-            /* 当前档位以字母发到屏文本组件 t3.txt */
+            /* 当前档位字母 → t3.txt（P/R/N/D/M/F） */
             {
                 const char *gearStr = "F";
                 switch (g_current_gear)
@@ -204,9 +204,31 @@ static void vTask_ADC_Sample( void *pvParameters )
                     case 1U:  gearStr = "R"; break;
                     case 2U:  gearStr = "N"; break;
                     case 3U:  gearStr = "D"; break;
+                    case 11U:
+                    case 12U:
+                    case 13U:
+                    case 14U:
+                    case 15U:
+                    case 16U: gearStr = "M"; break;   /* 手动档 */
                     default:  gearStr = "F"; break;   /* 255 = FAULT */
                 }
                 HMI_SendString("moudle.t3.txt", gearStr);
+            }
+
+            /* M 档位数字 → t1.txt（+1 ~ +6） */
+            {
+                const char *mStr = "+0";
+                switch (g_current_gear)
+                {
+                    case 11U: mStr = "+1"; break;
+                    case 12U: mStr = "+2"; break;
+                    case 13U: mStr = "+3"; break;
+                    case 14U: mStr = "+4"; break;
+                    case 15U: mStr = "+5"; break;
+                    case 16U: mStr = "+6"; break;
+                    default:  mStr = "+0"; break;
+                }
+                HMI_SendString("moudle.t1.txt", mStr);
             }
         }
     }
@@ -227,7 +249,7 @@ static void vTask_Gear_Logic( void *pvParameters )
 
         /* 1. 输入映射：采集量/占位量 → Stateflow 输入 */
         GearShift_Stateflow_U.stick_x        = (uint8_T)g_stick_x;
-        GearShift_Stateflow_U.stick_y        = 0U;                         /* 暂不做 M */
+        GearShift_Stateflow_U.stick_y        = (uint8_T)g_stick_y;        /* 进 M(=2) / 回 D(=1) */
         GearShift_Stateflow_U.brake_pedal    = (uint16_T)g_brake_pct;
         GearShift_Stateflow_U.vehicle_speed  = (uint16_T)g_vehicle_speed;
         GearShift_Stateflow_U.engine_rpm     = (uint16_T)g_engine_rpm;

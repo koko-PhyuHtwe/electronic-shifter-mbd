@@ -1,4 +1,4 @@
-﻿# MATLAB/Simulink 端 SBW 执行计划
+# MATLAB/Simulink 端 SBW 执行计划
 
 > 角色：模型开发与代码生成  
 > 目标：完成换挡状态机建模、仿真验证、生成面向 S32K144 的嵌入式 C 代码  
@@ -12,7 +12,7 @@
 |---|---|
 | P/R/N/D 逐级换挡 + `x_prev` 自锁防连跳 | 完成 |
 | 通信超时进 FAULT / valid 恢复 | 完成 |
-| M1~M6 手动模式 | 已画入 Stateflow，待仿真测试 |
+| M1~M6 手动模式（升降档/红区/x_prev/方向已修正） | 完成，四档+M档实测通过 |
 | 外部 Unit Delay 产生 x_prev | 已完成 |
 | 面向 NXP S32K144 的代码生成 | 已完成 |
 
@@ -20,24 +20,24 @@
 
 ## 2. 待完成工作
 
-### P1：M 档模型检查与仿真测试（当前优先）
-- [ ] 确认 Stateflow 中 M1~M6 六个子状态已正确添加
-- [ ] 确认 Init 状态已添加，用于 D→M 时按车速自动匹配初始档位
-- [ ] 检查各 M 档出口优先级：
+### P1：M 档模型检查与仿真测试（已完成）
+- [x] 确认 Stateflow 中 M1~M6 六个子状态已正确添加
+- [x] 确认 Init 状态已添加，用于 D→M 时按车速自动匹配初始档位
+- [x] 检查各 M 档出口优先级（方向已修正）：
   1. `comm_timeout_timer > 500` → FAULT
   2. `p_button && vehicle_speed < 5 && x_prev == 0` → P
-  3. `stick_y == 2 && x_prev == 0` → D（右推回自动）
+  3. `stick_y == 1 && x_prev == 0` → D（回自动）
   4. `engine_rpm > 6500`（M6 无）→ 强制升一档
   5. `engine_rpm < 1200`（M1 无）→ 强制降一档
-  6. `stick_x == 1 && x_prev == 0 && engine_rpm >= 2000 && vehicle_speed >= 门槛` → 升档
-  7. `stick_x == 2 && x_prev == 0 && vehicle_speed <= 门槛` → 降档
-  8. `[valid]{comm_timeout_timer = 0;}` → 自环
-- [ ] 确认 D 状态出口：`[stick_y == 1 && x_prev == 0]` → Init（左拉进手动）
-- [ ] 运行 Pacing=1 实时仿真验证
+  6. `stick_x == 2 && x_prev == 0 && engine_rpm >= 2000 && vehicle_speed >= 门槛` → 升档（前推）
+  7. `stick_x == 1 && x_prev == 0 && vehicle_speed <= 门槛` → 降档（后拉）
+  8. `comm_timeout_timer` 在 M1~M6 子状态 during 中处理（valid 清零，不重置子状态）
+- [x] 确认 D 状态出口：`[stick_y == 2 && x_prev == 0]` → Init（进手动）
+- [x] 双 MCU 实测 D→M→升降档→回 P 通过
 
 ### P2：M 档门槛参数表
 
-| 当前档 | 升档门槛（stick_x=1）| 降档门槛（stick_x=2）|
+| 当前档 | 升档门槛（stick_x=2 前推）| 降档门槛（stick_x=1 后拉）|
 |---|---|---|
 | M1=11 | vehicle_speed >= 25 → M2 | — |
 | M2=12 | vehicle_speed >= 50 → M3 | vehicle_speed <= 15 → M1 |
@@ -47,23 +47,23 @@
 | M6=16 | — | vehicle_speed <= 140 → M5 |
 
 ### P3：仿真验证清单
-- [ ] P→R→N→D 逐级换挡
-- [ ] D→M→升降档→回 D
-- [ ] 车速/转速不满足时禁止升降档
-- [ ] 通信超时进 FAULT，valid 恢复
+- [x] P→R→N→D 逐级换挡
+- [x] D→M→升降档→回 P（回 D 暂未接按键）
+- [x] 车速/转速不满足时禁止升降档
+- [ ] 通信超时进 FAULT，valid 恢复（未专门触发测试）
 - [ ] 所有 21 项测试用例通过
 
 ### P4：代码生成与交付
-- [ ] Configuration Parameters 确认：
+- [x] Configuration Parameters 确认：
   - Solver：Fixed-step，0.01s
   - Hardware：NXP S32K144 / Cortex-M4
   - System target file：ert.tlc
   - Enable long long：on
-- [ ] 生成代码后检查：
+- [x] 生成代码后检查：
   - `ExtU_GearShift_Stateflow_T` 包含 8 个输入
   - `ExtY_GearShift_Stateflow_T` 包含 current_gear / gear_display
   - `GearShift_Stateflow_step()` 可被 S32K144 调用
-- [ ] 将生成文件拷贝到 S32K144 工程目录
+- [x] 将生成文件拷贝到 S32K144 工程目录
 
 ---
 
@@ -96,7 +96,7 @@ GearShift_Stateflow_ert_rtw/
 
 ## 5. 验收标准
 
-- [ ] Stateflow 图无语法错误，Ctrl+D 更新通过
-- [ ] Pacing=1 实时仿真，换挡行为正确
-- [ ] 生成代码中 ExtU 结构包含 8 个输入信号
-- [ ] 生成代码中状态转移条件完整，未被优化掉
+- [x] Stateflow 图无语法错误，Ctrl+D 更新通过
+- [x] 生成代码中 ExtU 结构包含 8 个输入信号
+- [x] 生成代码中状态转移条件完整，未被优化掉
+- [ ] Pacing=1 实时仿真验证（未做，改由双 MCU 实测验证）

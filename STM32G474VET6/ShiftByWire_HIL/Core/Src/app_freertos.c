@@ -159,7 +159,18 @@ void vTask_Servo_Control(void *argument)
 
   for (;;)
   {
-    if (g_target_gear != last_gear)
+    /* 通信超时保护：超过 500ms 未收到 0x180 判定通信中断 */
+    if ((HAL_GetTick() - g_can_rx_tick) > 500U)
+    {
+      g_status |= 0x01U;   /* bit0 = 通信超时故障，进入 fail-safe */
+    }
+    else
+    {
+      g_status &= ~0x01U;  /* 通信恢复，清除故障标志 */
+    }
+
+    /* 仅在通信正常时响应新目标档；超时期间保持当前档（fail-safe） */
+    if ((g_target_gear != last_gear) && ((g_status & 0x01U) == 0U))
     {
       last_gear = g_target_gear;
       g_servo_angle = GearToAngle(last_gear);

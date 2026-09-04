@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'GearShift_Stateflow'.
  *
- * Model version                  : 1.20
+ * Model version                  : 1.21
  * Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
- * C/C++ source code generated on : Thu Sep  3 09:35:07 2026
+ * C/C++ source code generated on : Thu Sep  3 14:19:56 2026
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: NXP->Cortex-M4
@@ -90,10 +90,6 @@ static void GearShift_Stateflow_M_h(void)
 
     /* Outport: '<Root>/gear_display' */
     GearShift_Stateflow_Y.gear_display = 3U;
-  } else if (GearShift_Stateflow_U.valid) {
-    GearShift_Stateflow_DW.comm_timeout_timer = 0U;
-    GearShift_Stateflow_DW.is_c3_GearShift_Stateflow = GearShift_Stateflow_IN_M;
-    GearShift_Stateflow_DW.is_M = GearShift_Stateflow_IN_Init;
   } else {
     guard1 = false;
     guard2 = false;

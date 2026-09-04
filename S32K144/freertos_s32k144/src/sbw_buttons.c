@@ -1,11 +1,12 @@
 #include "sbw_buttons.h"
 
 volatile uint8_t g_stick_x       = 0U;
+volatile uint8_t g_stick_y       = 0U;
 volatile bool    g_p_button      = false;
 volatile bool    g_unlock_button = false;
 
 /* 每个键的消抖计数 */
-static uint8_t s_debounce[4] = {0U, 0U, 0U, 0U};
+static uint8_t s_debounce[5] = {0U, 0U, 0U, 0U, 0U};
 
 #define BTN_DEBOUNCE_CNT   3U   /* 连读 3 次(30ms)才确认按下 */
 
@@ -57,4 +58,7 @@ void Buttons_Update(void)
 
     g_p_button      = debounced(BTN3_GPIO, BTN3_PIN, 2U);
     g_unlock_button = debounced(BTN4_GPIO, BTN4_PIN, 3U);
+
+    /* 键5 = 进 M：按下 stick_y=2，松开回中=0（回 D 暂未接按键） */
+    g_stick_y = debounced(BTN5_GPIO, BTN5_PIN, 4U) ? 2U : 0U;
 }

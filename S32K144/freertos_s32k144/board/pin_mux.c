@@ -22,6 +22,7 @@ pin_labels:
 - {pin_num: '49', pin_signal: PTC13, label: MCU_KEY_2}
 - {pin_num: '48', pin_signal: PTB2, label: MCU_KEY_3}
 - {pin_num: '47', pin_signal: PTB3, label: MCU_KEY_4}
+- {pin_num: '46', pin_signal: PTC14, label: MCU_KEY_5}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -55,15 +56,16 @@ BOARD_InitPins:
   - {pin_num: '22', peripheral: PORTD, signal: 'port, 15', pin_signal: PTD15, direction: OUTPUT}
   - {pin_num: '58', peripheral: ADC0, signal: 'se, 2', pin_signal: PTA6}
   - {pin_num: '57', peripheral: ADC0, signal: 'se, 3', pin_signal: PTA7}
-  - {pin_num: '50', peripheral: PORTC, signal: 'port, 12', pin_signal: PTC12, direction: INPUT}
+  - {pin_num: '50', peripheral: PORTC, signal: 'port, 12', pin_signal: PTC12, direction: INPUT, PS: state_1}
   - {pin_num: '81', peripheral: LPUART1, signal: rxd, pin_signal: PTC6}
   - {pin_num: '80', peripheral: LPUART1, signal: txd, pin_signal: PTC7, direction: OUTPUT}
   - {pin_num: '44', peripheral: CAN2, signal: 'rxd, rxd', pin_signal: PTC16}
   - {pin_num: '43', peripheral: CAN2, signal: 'txd, txd', pin_signal: PTC17}
   - {pin_num: '4', peripheral: PORTD, signal: 'port, 0', pin_signal: PTD0, direction: OUTPUT}
-  - {pin_num: '49', peripheral: PORTC, signal: 'port, 13', pin_signal: PTC13, direction: INPUT}
-  - {pin_num: '48', peripheral: PORTB, signal: 'port, 2', pin_signal: PTB2, direction: INPUT}
-  - {pin_num: '47', peripheral: PORTB, signal: 'port, 3', pin_signal: PTB3, direction: INPUT}
+  - {pin_num: '49', peripheral: PORTC, signal: 'port, 13', pin_signal: PTC13, direction: INPUT, PS: state_1}
+  - {pin_num: '48', peripheral: PORTB, signal: 'port, 2', pin_signal: PTB2, direction: INPUT, PS: state_1}
+  - {pin_num: '47', peripheral: PORTB, signal: 'port, 3', pin_signal: PTB3, direction: INPUT, PS: state_1}
+  - {pin_num: '46', peripheral: PORTC, signal: 'port, 14', pin_signal: PTC14, direction: INPUT, PS: state_1}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -144,6 +146,21 @@ pin_settings_config_t g_pin_mux_InitConfigArr0[NUM_OF_CONFIGURED_PINS0] = {
     {
         .base            = PORTC,
         .pinPortIdx      = 13U,
+        .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
+        .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
+        .passiveFilter   = false,
+        .mux             = PORT_MUX_AS_GPIO,
+        .pinLock         = false,
+        .intConfig       = PORT_DMA_INT_DISABLED,
+        .clearIntFlag    = false,
+        .gpioBase        = PTC,
+        .direction       = GPIO_INPUT_DIRECTION,
+        .digitalFilter   = false,
+        .initValue       = 0U,
+    },
+    {
+        .base            = PORTC,
+        .pinPortIdx      = 14U,
         .pullConfig      = PORT_INTERNAL_PULL_NOT_ENABLED,
         .driveSelect     = PORT_LOW_DRIVE_STRENGTH,
         .passiveFilter   = false,
