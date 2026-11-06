@@ -58,15 +58,25 @@ instance:
     - adcAverageCfg: []
     - adcChanCfg:
       - 0:
-        - name: 'adc_config_1_ChnConfig0'
+        - name: 'adc_brake'
         - readonly: 'true'
         - interruptEnable: 'false'
         - channel: 'ADC_INPUTCHAN_EXT2'
       - 1:
-        - name: 'adc_config_1_ChnConfig1'
+        - name: 'adc_speed'
         - readonly: 'true'
         - interruptEnable: 'false'
         - channel: 'ADC_INPUTCHAN_EXT3'
+      - 2:
+        - name: 'adc_x'
+        - readonly: 'true'
+        - interruptEnable: 'false'
+        - channel: 'ADC_INPUTCHAN_EXT10'
+      - 3:
+        - name: 'adc_y'
+        - readonly: 'true'
+        - interruptEnable: 'false'
+        - channel: 'ADC_INPUTCHAN_EXT11'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -93,14 +103,24 @@ const adc_converter_config_t adc_config_1_ConvConfig0 = {
   .supplyMonitoringEnable = false
 };
 
-const adc_chan_config_t adc_config_1_ChnConfig0 = {
+const adc_chan_config_t adc_brake = {
   .interruptEnable = false,
   .channel = ADC_INPUTCHAN_EXT2
 };
 
-const adc_chan_config_t adc_config_1_ChnConfig1 = {
+const adc_chan_config_t adc_speed = {
   .interruptEnable = false,
   .channel = ADC_INPUTCHAN_EXT3
+};
+
+const adc_chan_config_t adc_x = {
+  .interruptEnable = false,
+  .channel = ADC_INPUTCHAN_EXT10
+};
+
+const adc_chan_config_t adc_y = {
+  .interruptEnable = false,
+  .channel = ADC_INPUTCHAN_EXT11
 };
 
 

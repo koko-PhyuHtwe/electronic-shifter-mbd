@@ -35,7 +35,9 @@ void MX_IWDG_Init(void)
   /* USER CODE END IWDG_Init 0 */
 
   /* USER CODE BEGIN IWDG_Init 1 */
-
+  /* 超时 = Reload / (LSI 32kHz / 64) = 625 / 500Hz = 1.25s
+   * 原来 3125(6.25s) 太长：看门狗只负责"CPU 卡死后恢复通信"，
+   * 舵机力矩由 TIM3 硬件 PWM 维持，不需要等这么久。 */
   /* USER CODE END IWDG_Init 1 */
   hiwdg.Instance = IWDG;
   hiwdg.Init.Prescaler = IWDG_PRESCALER_64;

@@ -36,10 +36,16 @@
 extern const adc_converter_config_t adc_config_1_ConvConfig0;
 
 /* Channel configuration 0 */
-extern const adc_chan_config_t adc_config_1_ChnConfig0;
+extern const adc_chan_config_t adc_brake;
 
 /* Channel configuration 1 */
-extern const adc_chan_config_t adc_config_1_ChnConfig1;
+extern const adc_chan_config_t adc_speed;
+
+/* Channel configuration 2 */
+extern const adc_chan_config_t adc_x;
+
+/* Channel configuration 3 */
+extern const adc_chan_config_t adc_y;
 
 
 

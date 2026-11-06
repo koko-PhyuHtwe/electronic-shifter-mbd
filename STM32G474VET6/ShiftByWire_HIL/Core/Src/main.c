@@ -55,6 +55,8 @@ volatile uint8_t g_actual_gear = 2;
 volatile uint8_t g_servo_angle = 90;
 volatile uint8_t g_status = 0;
 volatile uint32_t g_can_rx_tick = 0;
+volatile uint8_t  g_vehicle_speed = 0;   /* 来自 0x180 B4：车速 km/h */
+volatile uint8_t  g_shift_inhibit = 0;   /* 1 = 拒绝 P/R 指令（对端在行驶中重启过，锁定） */
 volatile uint16_t g_adc_buffer[4];
 /* USER CODE END PV */
 
@@ -106,7 +108,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_FDCAN2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);   /* 舵机：TIM3_CH1 → PE2，50Hz */
+  Motor_Init();                               /* 电机：先输出最小油门 1000us 再开 CH2，等电调解锁 */
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)g_adc_buffer, 4);
   /* USER CODE END 2 */
 

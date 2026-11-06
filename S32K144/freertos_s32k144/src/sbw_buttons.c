@@ -1,64 +1,80 @@
+/**
+ * @file    sbw_buttons.c
+ * @brief   按键消抖与电平解释
+ *
+ * @details 只有两个按键：P 档键（PTB4，低有效）与解锁键（PTB2，高有效）。
+ *          每个键各自维护一个计数器：连续读到按下才累加，读到松开立即清零，
+ *          计数达到 BTN_DEBOUNCE_CNT（30 ms）才认定为按下。
+ */
+
 #include "sbw_buttons.h"
 
-volatile uint8_t g_stick_x       = 0U;
-volatile uint8_t g_stick_y       = 0U;
-volatile bool    g_p_button      = false;
-volatile bool    g_unlock_button = false;
+/* ---------- 1. 常量 ---------- */
 
-/* 每个键的消抖计数 */
-static uint8_t s_debounce[5] = {0U, 0U, 0U, 0U, 0U};
+#define BTN_P_IDX           ( 0U )
+#define BTN_UNLOCK_IDX      ( 1U )
+#define BTN_COUNT           ( 2U )
 
-#define BTN_DEBOUNCE_CNT   3U   /* 连读 3 次(30ms)才确认按下 */
+/* ---------- 2. 对外信号 ---------- */
 
-static bool readPin(GPIO_Type *base, uint8_t pin)
+volatile bool g_p_button      = false;
+volatile bool g_unlock_button = false;
+
+/* ---------- 3. 私有变量 ---------- */
+
+static uint8_t s_debounceCnt[BTN_COUNT] = { 0U, 0U };
+
+/* ---------- 4. 私有函数 ---------- */
+
+/**
+ * @brief  读单个引脚电平并解释为「是否按下」
+ * @param  base        端口基址
+ * @param  pin         引脚序号 0~31
+ * @param  activeLevel 1 = 高电平按下，0 = 低电平按下
+ * @retval true = 按下
+ */
+static bool BoardKeyIsPressed(GPIO_Type *base, uint8_t pin, uint8_t activeLevel)
 {
-    uint32_t v = PINS_DRV_ReadPins(base);
+    uint32_t level  = PINS_DRV_ReadPins(base);
+    bool     isHigh = (((level >> pin) & 1UL) != 0UL);
 
-    if (BTN_PRESSED_LEVEL == 1U)
-    {
-        return ((v >> pin) & 1UL) != 0UL;   /* 按下高电平 */
-    }
-    else
-    {
-        return ((v >> pin) & 1UL) == 0UL;   /* 按下低电平 */
-    }
+    return (activeLevel != 0U) ? isHigh : (bool)(!isHigh);
 }
 
-static bool debounced(GPIO_Type *base, uint8_t pin, uint8_t idx)
+/**
+ * @brief  带消抖的按键读取
+ * @param  base        端口基址
+ * @param  pin         引脚序号
+ * @param  activeLevel 有效电平
+ * @param  idx         该键在 s_debounceCnt 中的下标
+ * @retval true = 已确认按下（连续 BTN_DEBOUNCE_CNT 次读到按下）
+ */
+static bool BoardKeyDebounced(GPIO_Type *base, uint8_t pin, uint8_t activeLevel, uint8_t idx)
 {
-    if (readPin(base, pin))
+    if (BoardKeyIsPressed(base, pin, activeLevel))
     {
-        if (s_debounce[idx] < 255U)
+        if (s_debounceCnt[idx] < 255U)
         {
-            s_debounce[idx]++;
+            s_debounceCnt[idx]++;
         }
     }
     else
     {
-        s_debounce[idx] = 0U;
+        s_debounceCnt[idx] = 0U;
     }
-    return (s_debounce[idx] >= BTN_DEBOUNCE_CNT);
+
+    return (s_debounceCnt[idx] >= BTN_DEBOUNCE_CNT);
 }
 
+/* ---------- 5. 对外接口 ---------- */
+
+/**
+ * @brief  刷新两个按键的消抖状态
+ */
 void Buttons_Update(void)
 {
-    /* 键1降档 / 键2升档 互斥 */
-    if (debounced(BTN1_GPIO, BTN1_PIN, 0U))
-    {
-        g_stick_x = 1U;                     /* 降档 */
-    }
-    else if (debounced(BTN2_GPIO, BTN2_PIN, 1U))
-    {
-        g_stick_x = 2U;                     /* 升档 */
-    }
-    else
-    {
-        g_stick_x = 0U;
-    }
-
-    g_p_button      = debounced(BTN3_GPIO, BTN3_PIN, 2U);
-    g_unlock_button = debounced(BTN4_GPIO, BTN4_PIN, 3U);
-
-    /* 键5 = 进 M：按下 stick_y=2，松开回中=0（回 D 暂未接按键） */
-    g_stick_y = debounced(BTN5_GPIO, BTN5_PIN, 4U) ? 2U : 0U;
+    g_p_button      = BoardKeyDebounced(BTN_P_GPIO, BTN_P_PIN,
+                                        BTN_P_ACTIVE_LEVEL, BTN_P_IDX);
+    g_unlock_button = BoardKeyDebounced(BTN_UNLOCK_GPIO, BTN_UNLOCK_PIN,
+                                        BTN_UNLOCK_ACTIVE_LEVEL, BTN_UNLOCK_IDX);
 }

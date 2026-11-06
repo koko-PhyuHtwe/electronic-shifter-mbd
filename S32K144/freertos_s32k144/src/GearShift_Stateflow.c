@@ -3,9 +3,9 @@
  *
  * Code generated for Simulink model 'GearShift_Stateflow'.
  *
- * Model version                  : 1.21
+ * Model version                  : 1.24
  * Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
- * C/C++ source code generated on : Thu Sep  3 14:19:56 2026
+ * C/C++ source code generated on : Fri Nov  6 21:45:04 2026
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: NXP->Cortex-M4
@@ -60,7 +60,7 @@ static void GearShift_Stateflow_M_h(void)
   boolean_T guard6;
   boolean_T guard7;
   boolean_T guard8;
-  if (GearShift_Stateflow_DW.comm_timeout_timer > 500) {
+  if (GearShift_Stateflow_DW.comm_timeout_timer > 200) {
     GearShift_Stateflow_DW.is_M = GearShift_St_IN_NO_ACTIVE_CHILD;
     GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
       GearShift_Stateflow_IN_FAULT;
@@ -72,7 +72,10 @@ static void GearShift_Stateflow_M_h(void)
     GearShift_Stateflow_Y.gear_display = MAX_uint8_T;
   } else if (GearShift_Stateflow_U.p_button &&
              (GearShift_Stateflow_U.vehicle_speed < 5) &&
-             (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0)) {
+             (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0) &&
+             (GearShift_Stateflow_U.brake_pedal > 30) &&
+             (GearShift_Stateflow_U.throttle_pct == 0) &&
+             (GearShift_Stateflow_U.vehicle_speed == 0)) {
     GearShift_Stateflow_DW.is_M = GearShift_St_IN_NO_ACTIVE_CHILD;
     GearShift_Stateflow_DW.is_c3_GearShift_Stateflow = GearShift_Stateflow_IN_P;
 
@@ -428,6 +431,7 @@ void GearShift_Stateflow_step(void)
    *  Inport: '<Root>/p_button'
    *  Inport: '<Root>/stick_x'
    *  Inport: '<Root>/stick_y'
+   *  Inport: '<Root>/throttle_pct'
    *  Inport: '<Root>/unlock_button'
    *  Inport: '<Root>/valid'
    *  Inport: '<Root>/vehicle_speed'
@@ -450,7 +454,7 @@ void GearShift_Stateflow_step(void)
 
       /* Outport: '<Root>/gear_display' */
       GearShift_Stateflow_Y.gear_display = 3U;
-      if (GearShift_Stateflow_DW.comm_timeout_timer > 500) {
+      if (GearShift_Stateflow_DW.comm_timeout_timer > 200) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_FAULT;
 
@@ -461,7 +465,10 @@ void GearShift_Stateflow_step(void)
         GearShift_Stateflow_Y.gear_display = MAX_uint8_T;
       } else if (GearShift_Stateflow_U.p_button &&
                  (GearShift_Stateflow_U.vehicle_speed < 5) &&
-                 (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0)) {
+                 (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0) &&
+                 (GearShift_Stateflow_U.brake_pedal > 30) &&
+                 (GearShift_Stateflow_U.throttle_pct == 0) &&
+                 (GearShift_Stateflow_U.vehicle_speed == 0)) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_P;
 
@@ -501,7 +508,8 @@ void GearShift_Stateflow_step(void)
       /* Outport: '<Root>/gear_display' */
       GearShift_Stateflow_Y.gear_display = MAX_uint8_T;
       if (GearShift_Stateflow_U.p_button && (GearShift_Stateflow_U.vehicle_speed
-           < 5) && (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0)) {
+           < 5) && (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0) &&
+          (GearShift_Stateflow_U.brake_pedal > 30)) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_P;
 
@@ -534,7 +542,7 @@ void GearShift_Stateflow_step(void)
 
       /* Outport: '<Root>/gear_display' */
       GearShift_Stateflow_Y.gear_display = 2U;
-      if (GearShift_Stateflow_DW.comm_timeout_timer > 500) {
+      if (GearShift_Stateflow_DW.comm_timeout_timer > 200) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_FAULT;
 
@@ -545,7 +553,8 @@ void GearShift_Stateflow_step(void)
         GearShift_Stateflow_Y.gear_display = MAX_uint8_T;
       } else if (GearShift_Stateflow_U.p_button &&
                  (GearShift_Stateflow_U.vehicle_speed < 5) &&
-                 (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0)) {
+                 (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0) &&
+                 (GearShift_Stateflow_U.brake_pedal > 30)) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_P;
 
@@ -590,7 +599,7 @@ void GearShift_Stateflow_step(void)
 
       /* Outport: '<Root>/gear_display' */
       GearShift_Stateflow_Y.gear_display = 0U;
-      if (GearShift_Stateflow_DW.comm_timeout_timer > 500) {
+      if (GearShift_Stateflow_DW.comm_timeout_timer > 200) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_FAULT;
 
@@ -641,7 +650,7 @@ void GearShift_Stateflow_step(void)
 
       /* Outport: '<Root>/gear_display' */
       GearShift_Stateflow_Y.gear_display = 1U;
-      if (GearShift_Stateflow_DW.comm_timeout_timer > 500) {
+      if (GearShift_Stateflow_DW.comm_timeout_timer > 200) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_FAULT;
 
@@ -652,7 +661,8 @@ void GearShift_Stateflow_step(void)
         GearShift_Stateflow_Y.gear_display = MAX_uint8_T;
       } else if (GearShift_Stateflow_U.p_button &&
                  (GearShift_Stateflow_U.vehicle_speed < 5) &&
-                 (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0)) {
+                 (GearShift_Stateflow_DW.UnitDelay1_DSTATE == 0) &&
+                 (GearShift_Stateflow_U.brake_pedal > 30)) {
         GearShift_Stateflow_DW.is_c3_GearShift_Stateflow =
           GearShift_Stateflow_IN_P;
 
