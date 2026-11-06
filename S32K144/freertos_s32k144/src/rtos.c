@@ -302,8 +302,6 @@ static void vTask_Gear_Logic( void *pvParameters )
         GearShift_Stateflow_U.p_button       = (boolean_T)g_p_button;
         GearShift_Stateflow_U.unlock_button  = (boolean_T)g_unlock_button;
         GearShift_Stateflow_U.valid          = (boolean_T)g_comm_valid;
-        GearShift_Stateflow_U.unlock_button  = (boolean_T)g_unlock_button;
-        GearShift_Stateflow_U.valid          = (boolean_T)g_comm_valid;
 
         /* Run one step of the gear state machine. */
         GearShift_Stateflow_step();
