@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "running",
+  "type": "explainer",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\t1.md",
+    "sha256": "89bac8e51f317a86eebcdc5f353c8ce6491da97bdb159e33aa98177a955e3180",
+    "bytes": 154
+  },
+  "artifact": {
+    "path": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\t1.html"
+  },
+  "gates": {
+    "validate": "not-run",
+    "deliver": "not-run",
+    "check": "not-run",
+    "browser-check": "not-run"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\t1.finalize.json",
+    "summaryReceipt": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\t1.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "browserCheck": {
+    "requested": false,
+    "ran": false
+  }
+}

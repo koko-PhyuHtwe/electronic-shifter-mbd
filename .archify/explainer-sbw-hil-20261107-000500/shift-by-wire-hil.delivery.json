@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "b431bde8-9aeb-4c40-b359-614dcaa85157",
+  "status": "current",
+  "command": "deliver",
+  "type": "explainer",
+  "input": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\candidate.archify.md",
+  "output": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+  "specification": {
+    "sha256": "d0e008374ed1c083c2468e242d4fcf4811fd286f1c87e213edc422317bb22d79",
+    "bytes": 6114
+  },
+  "artifact": {
+    "sha256": "c3e6d0a5525091bf5b31a26bef0d7c8ffe589ddfc216088b80d7c43e89dd72ef",
+    "bytes": 611476
+  },
+  "explainer": {
+    "preparedSha256": "8da9553a90b6c37d497f5ceeeb3b409600f5b6a9f756332ac5423fb6b55fa5fd",
+    "dependencies": [
+      {
+        "kind": "repository",
+        "id": "p_guard",
+        "path": "S32K144/freertos_s32k144/src/GearShift_Stateflow.c",
+        "revision": "7ac6edc13e7ce9b9b79a6f42a2a2569426fa416a",
+        "sha256": "2e756fd515337ca03ed1d986991833e94d8f6633afff2b60fa8c1c38aebe51a2",
+        "bytes": 26507
+      },
+      {
+        "kind": "repository",
+        "id": "exec_refuse",
+        "path": "STM32G474VET6/ShiftByWire_HIL/Core/Src/app_freertos.c",
+        "revision": "7ac6edc13e7ce9b9b79a6f42a2a2569426fa416a",
+        "sha256": "19970da1fd33ba2bdd7193358d523a6e20d23343755f7f3259cbeead7f9887c4",
+        "bytes": 20730
+      },
+      {
+        "kind": "repository",
+        "id": "life_check",
+        "path": "STM32G474VET6/ShiftByWire_HIL/Core/Src/fdcan.c",
+        "revision": "7ac6edc13e7ce9b9b79a6f42a2a2569426fa416a",
+        "sha256": "8662cd97763b0e00373e73ac12dad321e37e4f607fa918e416eb86559f8c8729",
+        "bytes": 9728
+      },
+      {
+        "kind": "diagram-spec",
+        "id": "shift-chain-flow",
+        "inline": true,
+        "sha256": "c19aa1c482ef18792a1e4283f7b71b7708b039f3e98d9e1c9ebf4207c26617ff",
+        "bytes": 620
+      }
+    ]
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "explainer",
+  "quality": "showcase",
+  "startedAt": "2026-11-06T16:30:06.806Z",
+  "specification": {
+    "path": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\candidate.archify.md",
+    "sha256": "d0e008374ed1c083c2468e242d4fcf4811fd286f1c87e213edc422317bb22d79",
+    "bytes": 6114
+  },
+  "artifact": {
+    "path": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+    "sha256": "c3e6d0a5525091bf5b31a26bef0d7c8ffe589ddfc216088b80d7c43e89dd72ef",
+    "bytes": 611476
+  },
+  "stages": {
+    "browser-check": {
+      "status": "not-run",
+      "execution": "not-requested"
+    },
+    "validate": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": null,
+      "execution": "embedded-in-deliver",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\10608\\.dsh\\skills\\archify\\bin\\archify.mjs",
+        "deliver",
+        "explainer",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\candidate.archify.md",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": true,
+        "command": "validate",
+        "specification": {
+          "sha256": "d0e008374ed1c083c2468e242d4fcf4811fd286f1c87e213edc422317bb22d79",
+          "bytes": 6114
+        },
+        "validation": {
+          "checksPassed": 4,
+          "checkCount": 4,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "deliver": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 1246,
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\10608\\.dsh\\skills\\archify\\bin\\archify.mjs",
+        "deliver",
+        "explainer",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\candidate.archify.md",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+        "--quality",
+        "showcase",
+        "--repo-root",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "receiptId": "b431bde8-9aeb-4c40-b359-614dcaa85157",
+        "ok": true,
+        "command": "deliver",
+        "type": "explainer",
+        "input": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\candidate.archify.md",
+        "output": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+        "explainer": {
+          "preparedSha256": "8da9553a90b6c37d497f5ceeeb3b409600f5b6a9f756332ac5423fb6b55fa5fd",
+          "dependencies": [
+            {
+              "kind": "repository",
+              "id": "p_guard",
+              "path": "S32K144/freertos_s32k144/src/GearShift_Stateflow.c",
+              "revision": "7ac6edc13e7ce9b9b79a6f42a2a2569426fa416a",
+              "sha256": "2e756fd515337ca03ed1d986991833e94d8f6633afff2b60fa8c1c38aebe51a2",
+              "bytes": 26507
+            },
+            {
+              "kind": "repository",
+              "id": "exec_refuse",
+              "path": "STM32G474VET6/ShiftByWire_HIL/Core/Src/app_freertos.c",
+              "revision": "7ac6edc13e7ce9b9b79a6f42a2a2569426fa416a",
+              "sha256": "19970da1fd33ba2bdd7193358d523a6e20d23343755f7f3259cbeead7f9887c4",
+              "bytes": 20730
+            },
+            {
+              "kind": "repository",
+              "id": "life_check",
+              "path": "STM32G474VET6/ShiftByWire_HIL/Core/Src/fdcan.c",
+              "revision": "7ac6edc13e7ce9b9b79a6f42a2a2569426fa416a",
+              "sha256": "8662cd97763b0e00373e73ac12dad321e37e4f607fa918e416eb86559f8c8729",
+              "bytes": 9728
+            },
+            {
+              "kind": "diagram-spec",
+              "id": "shift-chain-flow",
+              "inline": true,
+              "sha256": "c19aa1c482ef18792a1e4283f7b71b7708b039f3e98d9e1c9ebf4207c26617ff",
+              "bytes": 620
+            }
+          ]
+        },
+        "specification": {
+          "sha256": "d0e008374ed1c083c2468e242d4fcf4811fd286f1c87e213edc422317bb22d79",
+          "bytes": 6114
+        },
+        "artifact": {
+          "sha256": "c3e6d0a5525091bf5b31a26bef0d7c8ffe589ddfc216088b80d7c43e89dd72ef",
+          "bytes": 611476
+        },
+        "validation": {
+          "checksPassed": 4,
+          "checkCount": 4,
+          "compositionProfile": "showcase",
+          "compositionStatus": "pass",
+          "errors": 0,
+          "warnings": 0
+        },
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      }
+    },
+    "check": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 452,
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\10608\\.dsh\\skills\\archify\\bin\\archify.mjs",
+        "check",
+        "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+        "--require-provenance"
+      ],
+      "receipt": {
+        "ok": true,
+        "file": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.html",
+        "family": "explainer",
+        "artifact": {
+          "sha256": "c3e6d0a5525091bf5b31a26bef0d7c8ffe589ddfc216088b80d7c43e89dd72ef",
+          "bytes": 611476
+        },
+        "checks": [
+          {
+            "name": "explainer_structure",
+            "ok": true,
+            "details": [
+              "76 unique DOM IDs"
+            ]
+          },
+          {
+            "name": "explainer_payload_identity",
+            "ok": true,
+            "details": []
+          },
+          {
+            "name": "explainer_dependencies",
+            "ok": true,
+            "details": [
+              "4 frozen dependencies"
+            ]
+          },
+          {
+            "name": "explainer_native_diagrams",
+            "ok": true,
+            "details": [
+              "shift-chain-flow: pass"
+            ]
+          }
+        ],
+        "composition": {
+          "schemaVersion": 1,
+          "profile": "showcase",
+          "status": "pass",
+          "summary": {
+            "errors": 0,
+            "warnings": 0
+          },
+          "issues": [],
+          "nativeDiagrams": [
+            {
+              "id": "shift-chain-flow",
+              "receipt": {
+                "ok": true,
+                "file": "C:\\Users\\10608\\AppData\\Local\\Temp\\archify-explainer-check-I3tZ41\\child.html",
+                "artifact": {
+                  "sha256": "b9760a028c2a038180ad1bec11e57291994ca16a26311baf8533bd0628a4ac41",
+                  "bytes": 806730
+                },
+                "checks": [
+                  {
+                    "name": "single_svg",
+                    "ok": true,
+                    "details": [
+                      "found 1 <svg> block(s)"
+                    ]
+                  },
+                  {
+                    "name": "finite_svg",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "orthogonal_arrows",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "label_route_clearance",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "relationship_crossings",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "relationship_corridors",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "container_border_runs",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "route_rhythm",
+                    "ok": true,
+                    "details": []
+                  },
+                  {
+                    "name": "legend_clearance",
+                    "ok": true,
+                    "details": []
+                  }
+                ],
+                "composition": {
+                  "schemaVersion": 1,
+                  "profile": "showcase",
+                  "status": "pass",
+                  "summary": {
+                    "errors": 0,
+                    "warnings": 0
+                  },
+                  "metrics": {
+                    "properCrossings": 0,
+                    "resolvedCrossovers": 0,
+                    "ambiguousCorridors": 0,
+                    "arrowheadCollisions": 0,
+                    "containerBorderRuns": 0,
+                    "labelRouteClearanceIssues": 0,
+                    "labelCanvasOverflowIssues": 0,
+                    "minLabelRouteClearance": 149.9,
+                    "desktopReadabilityIssues": 0,
+                    "viewportHeightIssues": 0,
+                    "minProjectedNodeTextPx": 8,
+                    "maxBends": 0,
+                    "routesOverSuggestedBends": 0,
+                    "maxStretch": 1,
+                    "routesOverSuggestedStretch": 0,
+                    "minSegmentPx": 156,
+                    "minInteriorSegmentPx": null,
+                    "shortSegmentCount": 0,
+                    "shortEndpointSegmentCount": 0,
+                    "shortInteriorSegmentCount": 0,
+                    "microSegmentCount": 0
+                  },
+                  "suggestedLimits": {
+                    "bendsPerRelationship": 2,
+                    "stretch": 1.35,
+                    "segmentPx": 16,
+                    "microSegmentPx": 8
+                  },
+                  "routeReview": {
+                    "crossings": [],
+                    "detours": []
+                  },
+                  "leadingSpace": {
+                    "measured": true,
+                    "emptyTopPx": 80,
+                    "emptyTopRatio": 0.385,
+                    "occupiedTop": 80,
+                    "viewBoxTop": 0,
+                    "canvasHeight": 208,
+                    "typicalNodeHeight": 60,
+                    "reviewSuggested": false
+                  },
+                  "desktopReadability": {
+                    "budgetBasis": "recognized-declared-wide",
+                    "readerContract": "declared-wide-v1",
+                    "availableDiagramWidth": 930,
+                    "actualBudgetPx": 930,
+                    "actualReaderWidth": 960,
+                    "desiredReaderWidth": 960,
+                    "viewportCap": 1376,
+                    "limit": "source-size",
+                    "requestedTargetPx": 7.5,
+                    "requestedTargetMet": true,
+                    "hardFloorPx": 6,
+                    "hardFloorMet": true,
+                    "minimumOwner": {
+                      "kind": "edge",
+                      "id": "s32k-to-bus-1",
+                      "from": "s32k",
+                      "to": "bus"
+                    },
+                    "minimumSourceTextPx": 8,
+                    "minimumProjectedTextPx": 8,
+                    "semanticTextCount": 5
+                  },
+                  "issues": []
+                }
+              }
+            }
+          ]
+        },
+        "diagnostics": [],
+        "provenance": "current",
+        "deliveryReceiptId": "b431bde8-9aeb-4c40-b359-614dcaa85157"
+      }
+    }
+  },
+  "browserCheck": {
+    "requested": false,
+    "ran": false
+  },
+  "diagnostics": [],
+  "evidence": {
+    "receipt": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.finalize.json",
+    "summaryReceipt": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-20261107-000500\\shift-by-wire-hil.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "finishedAt": "2026-11-06T16:30:09.918Z",
+  "durationMs": 3112,
+  "update": {
+    "status": "unavailable",
+    "installedVersion": null,
+    "availableVersion": null,
+    "releaseNotes": null,
+    "checkedAt": null,
+    "source": null,
+    "noticeRequired": false,
+    "noticeText": null,
+    "reason": "timeout"
+  }
+}

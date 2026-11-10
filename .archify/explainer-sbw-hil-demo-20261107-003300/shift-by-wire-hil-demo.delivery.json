@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a65b1ac8-7672-4970-99e6-10a8e2591ab6",
+  "status": "current",
+  "command": "deliver",
+  "type": "explainer",
+  "input": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-demo-20261107-003300\\candidate.archify.md",
+  "output": "C:\\Users\\10608\\Documents\\bmw-shift-by-wire-hil\\.archify\\explainer-sbw-hil-demo-20261107-003300\\shift-by-wire-hil-demo.html",
+  "specification": {
+    "sha256": "ade28f278d3ab884d8e1e7728570adc719b418c698c88d09e9c0e78d1bc589cb",
+    "bytes": 3850
+  },
+  "artifact": {
+    "sha256": "166566577d3f24e9b7340383232258647aeabe9307c0a951715edc8243021b91",
+    "bytes": 146520
+  },
+  "explainer": {
+    "preparedSha256": "2b85bd72aab1a4d559f2a8435a20c3ac40b8cee9e3613f17315ef7cd6baf42a6",
+    "dependencies": []
+  }
+}
